@@ -1,91 +1,80 @@
-#include <iostream>
-#include <vector>
-#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-using namespace std;
+// Função para cadastrar as notas de um aluno
+void cadastrarNotas(char nome[], float notas[]) {
+    printf("Escreva o nome do aluno:\n ");
+    scanf("%s", nome);
 
-struct Aluno {
-    string nome;
-    vector<double> notas;
-};
-
-void adicionarAlunos(vector<Aluno>& alunos) {
-    for (int i = 0; i < 5; ++i) {
-        Aluno aluno;
-        cout << "Digite o nome do aluno " << i+1 << ": ";
-        cin >> aluno.nome;
-        cout << "Digite as notas do aluno " << aluno.nome << " (separadas por espaco): ";
-        for (int j = 0; j < 4; ++j) {
-            double nota;
-            cin >> nota;
-            aluno.notas.push_back(nota);
-        }
-        alunos.push_back(aluno);
+    printf("Escreva as notas do aluno:\n ");
+    int i;
+    for (i = 0; i < 4; ++i) {
+        scanf("%f", &notas[i]);
     }
 }
 
-void editarNotas(vector<Aluno>& alunos) {
-    string nome;
-    cout << "Digite o nome do aluno que deseja editar as notas: ";
-    cin >> nome;
-    for (int i = 0; i < alunos.size(); ++i) {
-        if (alunos[i].nome == nome) {
-            cout << "Digite as novas notas do aluno (separadas por espaco): ";
-            for (int j = 0; j < 4; ++j) {
-                cin >> alunos[i].notas[j];
-            }
-            return;
-        }
+// Função para calcular a média de um aluno e determinar seu status
+void calcularMediaEStatus(const char nome[], const float notas[]) {
+    float soma = 0;
+    int i;
+    for (i = 0; i < 4; ++i) {
+        soma += notas[i];
     }
-    cout << "Aluno nao encontrado." << endl;
-}
+    float media = soma / 4;
 
-void calcularMediaEStatus(const Aluno& aluno) {
-    double soma = 0;
-    for (int i = 0; i < aluno.notas.size(); ++i) {
-        soma += aluno.notas[i];
-    }
-    double media = soma / aluno.notas.size();
-    cout << "Aluno: " << aluno.nome << ", Media: " << media << ", Estado: ";
-    if (media >= 7.0) {
-        cout << "Aprovado";
-    } else if (media < 5.0) {
-        cout << "Reprovado";
+    printf("A media do aluno %s e %.2f\n", nome, media);
+
+    if (media < 4) {
+        printf("O aluno esta reprovado\n\n");
+    } else if (media >= 6) {
+        printf("O aluno esta aprovado\n\n");
     } else {
-        cout << "Recuperacao";
+        printf("O aluno esta de recuperacao\n\n");
     }
-    cout << endl;
 }
 
 int main() {
-    vector<Aluno> alunos;
-    int opcao;
+    const int NUM_ALUNOS = 5;
+    char nomes[NUM_ALUNOS][50];
+    float notas[NUM_ALUNOS][4];
 
+    int opcao;
     do {
-        cout << "\nMenu:\n1. Digitar nome e notas dos 5 alunos\n2. Editar notas\n3. Sair\nEscolha uma opcao: ";
-        cin >> opcao;
+        printf("MENU\n");
+        printf("1- Cadastro das Notas dos Alunos\n");
+        printf("2- Alteracao das Notas\n");
+        printf("3- SAIR\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+        system("cls");
 
         switch (opcao) {
             case 1:
-                adicionarAlunos(alunos);
+                system("cls");
+                printf("CADASTRO DE NOTAS DOS ALUNOS\n");
+                int i;
+				for (i = 0; i < NUM_ALUNOS; ++i) {
+                    cadastrarNotas(nomes[i], notas[i]);
+                    calcularMediaEStatus(nomes[i], notas[i]);
+                }
                 break;
             case 2:
-                editarNotas(alunos);
+                system("cls");
+                printf("ALTERACAO DE NOTAS\n");
+				for (i = 0; i < NUM_ALUNOS; ++i) {
+                    cadastrarNotas(nomes[i], notas[i]);
+                    calcularMediaEStatus(nomes[i], notas[i]);
+                }
                 break;
             case 3:
-                cout << "Saindo do programa.";
+                printf("Saindo...\n");
                 break;
             default:
-                cout << "Opcao invalida. Tente novamente.";
+                printf("Opcao invalida! Tente novamente.\n\n");
+                system("pause");
+                system("cls");
         }
-
-        if (opcao == 1 || opcao == 2) {
-            cout << "\nEstado dos alunos:\n";
-            for (int i = 0; i < alunos.size(); ++i) {
-                calcularMediaEStatus(alunos[i]);
-            }
-        }
-
     } while (opcao != 3);
 
     return 0;
